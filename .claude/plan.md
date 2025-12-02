@@ -1,9 +1,11 @@
 # Next.js Personal Blog Implementation Plan
 
 ## Overview
+
 Build a static Next.js blog with Markdown content, Lanyon-inspired theme, pagination, categories, and full SEO support.
 
 ## User Preferences
+
 - **Sample Content**: Create 3-5 example posts
 - **Sidebar Behavior**: Visible on desktop, toggleable on mobile
 - **Features**: Minimal (no search, reading time, or TOC)
@@ -13,24 +15,30 @@ Build a static Next.js blog with Markdown content, Lanyon-inspired theme, pagina
 ## Phase 1: Dependencies & Foundation
 
 ### 1.1 Install Required Packages
+
 ```bash
 pnpm add gray-matter remark remark-html remark-gfm rehype-highlight rehype-stringify feed date-fns
 ```
 
 **Packages:**
+
 - `gray-matter`: Parse frontmatter from markdown
 - `remark/rehype`: Markdown processing pipeline
 - `feed`: RSS feed generation
 - `date-fns`: Date formatting
 
 ### 1.2 Create Type Definitions
+
 **File:** `types/post.ts`
+
 - `Frontmatter` interface (title, description, date, category, slug)
 - `Post` interface (frontmatter + content)
 - `PaginatedPosts` interface (posts[], totalPages, currentPage)
 
 ### 1.3 Create Constants
+
 **File:** `lib/constants.ts`
+
 - Site metadata (SITE_TITLE, SITE_DESCRIPTION, SITE_URL, AUTHOR)
 - POSTS_PER_PAGE = 10
 - Categories list
@@ -40,13 +48,17 @@ pnpm add gray-matter remark remark-html remark-gfm rehype-highlight rehype-strin
 ## Phase 2: Core Utilities
 
 ### 2.1 Markdown Processing
+
 **File:** `lib/markdown.ts`
+
 - `markdownToHtml(markdown: string): Promise<string>`
 - Configure remark with plugins: remark-gfm, rehype-highlight
 
 ### 2.2 Post Management
+
 **File:** `lib/posts.ts`
 Critical utility powering all pages:
+
 - `getAllPosts(): Post[]` - Read all markdown files from /posts
 - `getPostBySlug(slug: string): Post | null` - Get single post
 - `getPostsByCategory(category: string): Post[]` - Filter by category
@@ -56,13 +68,17 @@ Critical utility powering all pages:
 - Use Node.js `fs` and `path` for file operations
 
 ### 2.3 Pagination Logic
+
 **File:** `lib/pagination.ts`
+
 - `paginatePosts(posts: Post[], page: number, perPage: number): PaginatedPosts`
 - Calculate total pages
 - Slice posts array for current page
 
 ### 2.4 RSS Feed Generation
+
 **File:** `lib/rss.ts`
+
 - `generateRSSFeed(): string` - Generate RSS XML using `feed` package
 - Include all posts with full content
 
@@ -71,7 +87,9 @@ Critical utility powering all pages:
 ## Phase 3: UI Components
 
 ### 3.1 Theme Toggle
+
 **File:** `components/ThemeToggle.tsx`
+
 - Client component (`'use client'`)
 - Toggle between light/dark modes
 - Persist preference in localStorage
@@ -79,7 +97,9 @@ Critical utility powering all pages:
 - Handle initial load from localStorage or system preference
 
 ### 3.2 Sidebar
+
 **File:** `components/Sidebar.tsx`
+
 - **Desktop**: Always visible (user preference)
 - **Mobile**: Toggleable with hamburger button
 - Contains:
@@ -90,28 +110,36 @@ Critical utility powering all pages:
 - Lanyon-inspired styling with Tailwind
 
 ### 3.3 Post Display Components
+
 **File:** `components/PostCard.tsx`
+
 - Display post preview (title, date, description, category badge)
 - Link to full post
 - Format date with date-fns
 
 **File:** `components/PostList.tsx`
+
 - Render array of PostCard components
 - Handle empty state
 
 **File:** `components/CategoryBadge.tsx`
+
 - Small badge with category name
 - Link to category page
 
 ### 3.4 Pagination
+
 **File:** `components/Pagination.tsx`
+
 - Previous/Next buttons
 - Page number display (e.g., "Page 2 of 5")
 - Link to `/page/[n]` routes
 - Disabled states for first/last pages
 
 ### 3.5 Markdown Renderer
+
 **File:** `components/MarkdownContent.tsx`
+
 - Styled container for rendered HTML
 - Typography classes (prose-like with Tailwind)
 - Code block styling with syntax highlighting
@@ -123,7 +151,9 @@ Critical utility powering all pages:
 ## Phase 4: Page Routes
 
 ### 4.1 Root Layout
+
 **File:** `app/layout.tsx` (MODIFY)
+
 - Integrate Sidebar component
 - Lanyon-inspired layout structure:
   - Sidebar (visible on desktop, toggleable on mobile)
@@ -133,7 +163,9 @@ Critical utility powering all pages:
 - Add `suppressHydrationWarning` to `<html>` for theme
 
 ### 4.2 Homepage
+
 **File:** `app/page.tsx` (MODIFY)
+
 - Fetch all posts (sorted by date, page 1)
 - Use `getSortedPosts()` and `paginatePosts()`
 - Render PostList component
@@ -141,7 +173,9 @@ Critical utility powering all pages:
 - Generate metadata for SEO
 
 ### 4.3 Paginated Homepage
+
 **File:** `app/page/[page]/page.tsx`
+
 - Dynamic route for pagination
 - `generateStaticParams()` to pre-render all page numbers
 - Fetch posts for specific page
@@ -150,7 +184,9 @@ Critical utility powering all pages:
 - Generate metadata
 
 ### 4.4 Individual Post Pages
+
 **File:** `app/posts/[slug]/page.tsx`
+
 - `generateStaticParams()` for all post slugs
 - Fetch post by slug using `getPostBySlug()`
 - Convert markdown to HTML using `markdownToHtml()`
@@ -166,7 +202,9 @@ Critical utility powering all pages:
 - Handle 404 for invalid slugs
 
 ### 4.5 Category Pages
+
 **File:** `app/category/[category]/page.tsx`
+
 - `generateStaticParams()` for all categories
 - Fetch posts by category using `getPostsByCategory()`
 - Render PostList component
@@ -179,14 +217,18 @@ Critical utility powering all pages:
 ## Phase 5: SEO & Feeds
 
 ### 5.1 RSS Feed
+
 **File:** `app/rss.xml/route.ts`
+
 - Route handler returning RSS XML
 - Call `generateRSSFeed()` from lib/rss.ts
 - Set proper headers (`Content-Type: application/xml`)
 - Make static: `export const dynamic = 'force-static'`
 
 ### 5.2 Sitemap
+
 **File:** `app/sitemap.ts`
+
 - Export sitemap function per Next.js convention
 - Return array of all URLs:
   - Homepage + paginated pages
@@ -196,7 +238,9 @@ Critical utility powering all pages:
 - Next.js auto-generates sitemap.xml
 
 ### 5.3 Robots.txt
+
 **File:** `app/robots.ts`
+
 - Export robots function
 - Allow all crawlers
 - Reference sitemap URL
@@ -206,7 +250,9 @@ Critical utility powering all pages:
 ## Phase 6: Styling (Lanyon Theme)
 
 ### 6.1 Update Global Styles
+
 **File:** `app/globals.css` (MODIFY)
+
 - Define Lanyon-inspired color palette
 - Enhance dark mode CSS variables
 - Typography scale (rem-based)
@@ -215,7 +261,9 @@ Critical utility powering all pages:
 - Sidebar styling (visible on desktop, slide-in on mobile)
 
 ### 6.2 Tailwind Implementation
+
 Use Tailwind utility classes throughout for:
+
 - Layout (flexbox, grid)
 - Spacing (padding, margins)
 - Typography (sizes, weights, line heights)
@@ -224,6 +272,7 @@ Use Tailwind utility classes throughout for:
 - Responsive breakpoints (`sm:`, `md:`, `lg:`)
 
 ### 6.3 Lanyon Visual Design
+
 - **Color Scheme**: Use Lanyon's default theme colors
 - **Typography**: System fonts for fast loading
 - **Layout**: Centered content with max-width (similar to Lanyon)
@@ -237,9 +286,11 @@ Use Tailwind utility classes throughout for:
 ## Phase 7: Static Export Configuration
 
 ### 7.1 Update Next.js Config
+
 **File:** `next.config.ts` (MODIFY)
+
 ```typescript
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   output: 'export', // Enable static HTML export
@@ -253,6 +304,7 @@ export default nextConfig;
 ```
 
 ### 7.2 Build & Verify
+
 ```bash
 # Build static site
 pnpm build
@@ -262,6 +314,7 @@ npx serve out
 ```
 
 Verify output in `/out` directory:
+
 - index.html (homepage)
 - page/2/index.html, page/3/index.html (pagination)
 - posts/[slug]/index.html (all posts)
@@ -274,15 +327,17 @@ Verify output in `/out` directory:
 ## Phase 8: Sample Content
 
 ### 8.1 Create Sample Posts
+
 Create 3-5 markdown files in `/posts` directory with varied content:
 
 **Example:** `posts/welcome-to-my-blog.md`
+
 ```markdown
 ---
-title: "Welcome to My Blog"
-description: "Introduction to my personal blog and what to expect"
-date: "2024-12-01"
-category: "personal"
+title: 'Welcome to My Blog'
+description: 'Introduction to my personal blog and what to expect'
+date: '2024-12-01'
+category: 'personal'
 ---
 
 # Welcome!
@@ -291,6 +346,7 @@ This is my first blog post...
 ```
 
 **Posts to create:**
+
 1. `welcome-to-my-blog.md` (category: personal)
 2. `getting-started-with-nextjs.md` (category: tech)
 3. `my-favorite-books-2024.md` (category: personal)
@@ -298,6 +354,7 @@ This is my first blog post...
 5. `travel-photography-tips.md` (category: travel)
 
 ### 8.2 Add Sample Images
+
 - Create `/public/images/posts/` directory
 - Add 2-3 sample images
 - Reference in markdown posts using:
@@ -310,6 +367,7 @@ This is my first blog post...
 ## Phase 9: Testing & Verification
 
 ### 9.1 Testing Checklist
+
 - [ ] Homepage displays posts correctly
 - [ ] Pagination works (navigate between pages)
 - [ ] Individual post pages render markdown properly
@@ -326,6 +384,7 @@ This is my first blog post...
 - [ ] Lighthouse audit (performance, accessibility, SEO)
 
 ### 9.2 Static Export Verification
+
 ```bash
 pnpm build
 ls -R out/  # Check all routes generated
@@ -337,6 +396,7 @@ npx serve out  # Test locally
 ## Critical Files Summary
 
 ### Must Create (Priority Order)
+
 1. `types/post.ts` - Type definitions
 2. `lib/constants.ts` - Site configuration
 3. `lib/markdown.ts` - Markdown processing
@@ -359,6 +419,7 @@ npx serve out  # Test locally
 20. `posts/*.md` - Sample markdown posts (3-5 files)
 
 ### Must Modify
+
 1. `app/layout.tsx` - **CRITICAL** - Root layout with sidebar
 2. `app/page.tsx` - Homepage with post list
 3. `app/globals.css` - Lanyon theme styling
@@ -369,29 +430,34 @@ npx serve out  # Test locally
 ## Key Implementation Notes
 
 ### Static Generation
+
 - All pages use SSG (no runtime API calls)
 - `generateStaticParams()` required for all dynamic routes
 - `output: 'export'` in next.config.ts
 - Images must be unoptimized for static export
 
 ### Theme System
+
 - Light/dark mode using CSS classes on `<html>` element
 - localStorage key: `theme` (values: 'light' | 'dark')
 - Prevent FOUC with inline script in layout.tsx
 - Tailwind `dark:` variants for styling
 
 ### Sidebar Behavior
+
 - **Desktop (≥1024px)**: Always visible, fixed position
 - **Mobile (<1024px)**: Hidden by default, hamburger button, slide-in overlay
 - Contains: site title, navigation, category links, theme toggle
 
 ### Content Structure
+
 - Markdown files in `/posts` directory
 - Frontmatter: title, description, date (YYYY-MM-DD), category
 - Images in `/public/images/posts/`
 - Slug derived from filename (kebab-case)
 
 ### Performance
+
 - Tailwind CSS for minimal CSS
 - No heavy JavaScript libraries
 - Syntax highlighting only where needed
@@ -399,6 +465,7 @@ npx serve out  # Test locally
 - Static HTML for fastest loading
 
 ### SEO Features
+
 - Unique metadata per page
 - Open Graph tags for social sharing
 - Canonical URLs
@@ -425,7 +492,9 @@ npx serve out
 ---
 
 ## Deployment
+
 Upload `/out` directory to any static hosting:
+
 - Vercel (automatic with Git integration)
 - Netlify (drag & drop)
 - GitHub Pages

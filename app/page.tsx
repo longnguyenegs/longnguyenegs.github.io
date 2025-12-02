@@ -1,4 +1,4 @@
-
 export default function Home() {
-  return <div>Long Nguyen's Blog</div>
+  const test = '';
+  return <div>Long Nguyen Blog</div>;
 }
