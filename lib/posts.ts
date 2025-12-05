@@ -41,15 +41,17 @@ function getAllPosts(): Post[] {
       const { data, content } = matter(fileContents);
 
       // Validate required fields
-      if (!data.title || !data.date) {
-        console.warn(`Skipping ${fileName}: missing title or date`);
+      if (!data.title || !data.date || !data.description) {
+        console.warn(
+          `Skipping ${fileName}: missing title, date, or description`
+        );
         return null;
       }
 
       return {
         slug,
         title: data.title,
-        description: data.description ?? '',
+        description: data.description,
         date: data.date,
         category: data.category,
         content,

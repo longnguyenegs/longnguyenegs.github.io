@@ -11,7 +11,6 @@ export default function Home() {
               {post.title}
             </h1>
             <p>{post.description}</p>
-            <p className="line-clamp-3">{post.content}</p>
           </div>
         );
       })}

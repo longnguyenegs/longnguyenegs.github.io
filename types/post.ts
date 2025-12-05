@@ -3,7 +3,7 @@ import { Category } from '@/lib/site-config';
 export interface Post {
   slug: string;
   title: string;
-  description?: string;
+  description: string;
   date: string;
   category?: Category;
   content: string;
