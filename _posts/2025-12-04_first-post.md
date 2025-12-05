@@ -1,7 +1,7 @@
 ---
 title: 'Preview Mode for Static Generation'
 description: 'A comprehensive guide'
-date: '2020-03-16T05:35:07.322Z'
+date: '2020-03-16'
 category: 'tech'
 ---
 
