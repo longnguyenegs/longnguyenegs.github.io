@@ -85,6 +85,11 @@ export function getPaginatedPosts(page: number = 1): PaginatedPosts {
   };
 }
 
+export function getAllPostSlugs(): string[] {
+  const allPosts = getAllPosts();
+  return allPosts.map((post) => post.slug);
+}
+
 export function getPostBySlug(slug: string): Post | null {
   const allPosts = getAllPosts();
   return allPosts.find((post) => post.slug === slug) || null;
