@@ -49,6 +49,13 @@ function getAllPosts(): Post[] {
         return null;
       }
 
+      // Validate date is valid
+      const postDate = new Date(data.date);
+      if (isNaN(postDate.getTime())) {
+        console.warn(`Skipping ${fileName}: invalid date "${data.date}"`);
+        return null;
+      }
+
       return {
         slug,
         title: data.title,

@@ -15,6 +15,11 @@ export default async function PaginatedPage({ params }: PageProps) {
   }
 
   const data = getPaginatedPosts(page);
+
+  if (page > data.totalPage) {
+    notFound();
+  }
+
   return <PostList {...data} />;
 }
 
