@@ -1,5 +1,7 @@
 import { getAllPostSlugs, getPostBySlug } from '@/lib/posts';
+import { formatDate } from '@/lib/utils';
 import { notFound } from 'next/navigation';
+import Markdown from 'react-markdown';
 
 export default async function PostPage({
   params,
@@ -17,8 +19,10 @@ export default async function PostPage({
     <div className="container mx-auto max-w-3xl py-12">
       <article>
         <h1 className="mb-4 text-2xl">{post.title}</h1>
-        <time dateTime={post.date}>{post.date}</time>
-        <pre className="whitespace-pre-wrap">{post.content}</pre>
+        <time dateTime={post.date}>{formatDate(post.date)}</time>
+        <div>
+          <Markdown>{post.content}</Markdown>
+        </div>
       </article>
     </div>
   );

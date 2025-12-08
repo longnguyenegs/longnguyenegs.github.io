@@ -1,3 +1,4 @@
+import { formatDate } from '@/lib/utils';
 import { Post } from '@/types/post';
 import Link from 'next/link';
 import Pagination from './Pagination';
@@ -21,7 +22,7 @@ export default function PostList({
             <Link href={`/posts/${post.slug}`}>
               <h2 className="mb-2 text-2xl text-gray-900">{post.title}</h2>
             </Link>
-            <time dateTime={post.date}>{post.date}</time>
+            <time dateTime={post.date}>{formatDate(post.date)}</time>
             <p className="mt-4 text-gray-700">{post.description}</p>
           </article>
         );
