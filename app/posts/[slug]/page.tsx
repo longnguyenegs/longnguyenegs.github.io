@@ -1,7 +1,26 @@
 import { getAllPostSlugs, getPostBySlug } from '@/lib/posts';
 import { formatDate } from '@/lib/utils';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Markdown from 'react-markdown';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
+
+  if (!post) {
+    return {};
+  }
+
+  return {
+    title: post.title,
+    description: post.description,
+  };
+}
 
 export default async function PostPage({
   params,
@@ -16,10 +35,15 @@ export default async function PostPage({
   }
 
   return (
-    <div className="container mx-auto max-w-3xl py-12">
+    <div className="container mx-auto max-w-3xl px-4 py-12">
       <article>
-        <h1 className="mb-4 text-2xl">{post.title}</h1>
-        <time dateTime={post.date}>{formatDate(post.date)}</time>
+        <h1 className="mb-2 text-3xl font-bold">{post.title}</h1>
+        <time
+          className="mb-4 block text-base text-[var(--text-secondary)]"
+          dateTime={post.date}
+        >
+          {formatDate(post.date)}
+        </time>
         <div>
           <Markdown>{post.content}</Markdown>
         </div>

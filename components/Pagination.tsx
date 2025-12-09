@@ -20,7 +20,7 @@ export default function Pagination({
   const hasNext = currentPage < totalPage;
 
   return (
-    <nav className="mt-12 mb-4 flex items-center justify-between border-t border-gray-100 px-12 py-4">
+    <nav className="flex items-center justify-between border-t border-gray-100 px-12 py-4">
       {/* Previous link */}
       <div>
         {hasPrev ? (

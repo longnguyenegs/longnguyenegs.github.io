@@ -1,1 +1,25 @@
 @import 'tailwindcss';
+
+/* CSS Variables - Basic Colors */
+:root {
+  /* Color - Light mode */
+  --bg-primary: #ffffff;
+  --text-primary: #2c343c;
+  --text-secondary: #9a9a9a;
+  --link-color: #268bd2;
+  --link-hover: #1e6fa8;
+  --border-color: #e5e5e5;
+}
+
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+
+/* Base Styles */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 16px;
+  line-height: 1.75;
+}

@@ -2,11 +2,11 @@ import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { SITE_CONFIG } from '@/lib/site-config';
 import type { Metadata } from 'next';
-import { PT_Sans } from 'next/font/google';
+import { Merriweather } from 'next/font/google';
 import './globals.css';
 
-const ptSans = PT_Sans({
-  weight: ['400'],
+const merriweather = Merriweather({
+  weight: ['400', '700'],
   subsets: ['latin'],
   display: 'swap',
 });
@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${ptSans.className} flex min-h-screen flex-col antialiased`}
+        className={`${merriweather.className} flex min-h-screen flex-col antialiased`}
       >
         <Header />
         <main className="flex-1">{children}</main>

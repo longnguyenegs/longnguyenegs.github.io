@@ -15,18 +15,25 @@ export default function PostList({
   totalPage,
 }: PostListProps) {
   return (
-    <div className="container mx-auto max-w-3xl">
-      {posts.map((post) => {
-        return (
-          <article className="mt-8" key={post.slug}>
-            <Link href={`/posts/${post.slug}`}>
-              <h2 className="mb-2 text-2xl text-gray-900">{post.title}</h2>
-            </Link>
-            <time dateTime={post.date}>{formatDate(post.date)}</time>
-            <p className="mt-4 text-gray-700">{post.description}</p>
-          </article>
-        );
-      })}
+    <div className="container mx-auto max-w-3xl px-4 py-12">
+      <div className="space-y-12">
+        {posts.map((post) => {
+          return (
+            <article className="mb-12" key={post.slug}>
+              <Link href={`/posts/${post.slug}`}>
+                <h1 className="mb-2 text-3xl font-bold">{post.title}</h1>
+              </Link>
+              <time
+                className="mb-4 block text-base text-[var(--text-secondary)]"
+                dateTime={post.date}
+              >
+                {formatDate(post.date)}
+              </time>
+              <p className="">{post.description}</p>
+            </article>
+          );
+        })}
+      </div>
       <Pagination currentPage={currentPage} totalPage={totalPage} />
     </div>
   );
