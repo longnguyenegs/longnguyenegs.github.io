@@ -20,37 +20,34 @@ export default function Pagination({
   const hasNext = currentPage < totalPage;
 
   return (
-    <nav className="flex items-center justify-between border-t border-gray-100 px-12 py-4">
+    <nav className="flex items-center justify-between border-t border-[var(--border-color)] py-4">
       {/* Previous link */}
       <div>
         {hasPrev ? (
           <Link
             href={prevPage === 1 ? '/' : `/page/${prevPage}`}
-            className="text-lg text-gray-600 transition-colors hover:text-gray-900"
+            className="text-lg"
           >
             Newer
           </Link>
         ) : (
-          <span className="text-lg text-gray-300">Newer</span>
+          <span className="text-lg text-[var(--text-secondary)]">Newer</span>
         )}
       </div>
 
       {/* Page indicator */}
-      <span className="text-base text-gray-500">
+      <span className="text-base text-[var(--text-muted)]">
         {currentPage}/{totalPage}
       </span>
 
       {/* Next link */}
       <div>
         {hasNext ? (
-          <Link
-            href={`/page/${nextPage}`}
-            className="text-lg text-gray-600 transition-colors hover:text-gray-900"
-          >
+          <Link href={`/page/${nextPage}`} className="text-lg">
             Older
           </Link>
         ) : (
-          <span className="text-lg text-gray-300">Older</span>
+          <span className="text-lg text-[var(--text-secondary)]">Older</span>
         )}
       </div>
     </nav>

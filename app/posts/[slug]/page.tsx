@@ -1,3 +1,4 @@
+import BackButton from '@/components/BackButton';
 import { getAllPostSlugs, getPostBySlug } from '@/lib/posts';
 import { formatDate } from '@/lib/utils';
 import { Metadata } from 'next';
@@ -37,16 +38,17 @@ export default async function PostPage({
   return (
     <div className="container mx-auto max-w-3xl px-4 py-12">
       <article>
-        <h1 className="mb-2 text-3xl font-bold">{post.title}</h1>
+        <h2 className="text-3xl font-bold">{post.title}</h2>
         <time
-          className="mb-4 block text-base text-[var(--text-secondary)]"
+          className="mb-4 block text-sm text-[var(--text-muted)]"
           dateTime={post.date}
         >
           {formatDate(post.date)}
         </time>
-        <div>
+        <div className="text-[var(--text-primary)]">
           <Markdown>{post.content}</Markdown>
         </div>
+        <BackButton />
       </article>
     </div>
   );

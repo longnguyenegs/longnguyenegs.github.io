@@ -1,163 +1,39 @@
-# Lanyon-Inspired Theming Plan with Dark/Light Mode
+# Implementation Plan: Hybrid Tailwind + Lanyon Base Styles with Dark/Light Mode
 
-## Overview
+## Goal
 
-This plan outlines the implementation of a Lanyon-inspired design system with toggleable dark/light themes for the Next.js blog. The plan focuses on matching Lanyon's elegant, content-first aesthetic while adding modern theme switching capabilities.
+Implement a Lanyon-inspired design system with:
 
----
+- ✅ Dark/light mode support
+- ✅ Merriweather font (as configured in `layout.tsx`)
+- ✅ Hybrid approach: Tailwind utilities + CSS base styles
+- ✅ Clean, maintainable component code
 
-## 1. Design Tokens (from Lanyon CSS)
+## Current State
 
-### Typography
+- **Font:** Merriweather (400, 700) in `layout.tsx`
+- **CSS:** 25 lines in `globals.css` with 6 basic CSS variables
+- **Styling:** Pure Tailwind utility classes
+- **Theme:** Light mode only
 
-```css
-/* Fonts */
---font-serif: 'PT Serif', Georgia, 'Times New Roman', serif;
---font-sans: 'PT Sans', Helvetica, Arial, sans-serif;
+## Target State
 
-/* Font Sizes (rem units for scalability) */
---text-xs: 0.75rem; /* 12px */
---text-sm: 0.875rem; /* 14px */
---text-base: 1rem; /* 16px */
---text-lg: 1.25rem; /* 20px */
---text-xl: 1.5rem; /* 24px */
---text-2xl: 2rem; /* 32px */
---text-3xl: 2.5rem; /* 40px */
-
-/* Line Heights */
---leading-tight: 1.25;
---leading-normal: 1.5;
---leading-relaxed: 1.75;
-
-/* Font Weights */
---font-normal: 400;
---font-bold: 700;
-
-/* Letter Spacing */
---tracking-tight: -0.025rem;
-```
-
-### Colors (Lanyon Base16 Themes)
-
-**Light Mode (Default):**
-
-```css
---bg-primary: #ffffff;
---bg-secondary: #f9f9f9;
---bg-sidebar: #202020;
-
---text-primary: #313131;
---text-secondary: #515151;
---text-muted: #9a9a9a;
---text-sidebar: rgba(255, 255, 255, 0.6);
---text-sidebar-active: #ffffff;
-
---border-color: #e5e5e5;
---link-color: #268bd2; /* Blue accent */
---link-hover: #1e6fa8;
-```
-
-**Dark Mode:**
-
-```css
---bg-primary: #1a1a1a;
---bg-secondary: #202020;
---bg-sidebar: #0a0a0a;
-
---text-primary: #e0e0e0;
---text-secondary: #b0b0b0;
---text-muted: #707070;
---text-sidebar: rgba(255, 255, 255, 0.5);
---text-sidebar-active: #ffffff;
-
---border-color: #2a2a2a;
---link-color: #6a9fb5; /* Softer blue for dark */
---link-hover: #8bb9d0;
-```
-
-**8 Optional Theme Colors** (for accent/customization):
-
-```css
---theme-red: #ac4142;
---theme-orange: #d28445;
---theme-yellow: #f4bf75;
---theme-green: #90a959;
---theme-cyan: #75b5aa;
---theme-blue: #6a9fb5;
---theme-magenta: #aa759f;
---theme-brown: #8f5536;
-```
-
-### Spacing & Layout
-
-```css
-/* Spacing Scale */
---space-1: 0.25rem; /* 4px */
---space-2: 0.5rem; /* 8px */
---space-3: 0.75rem; /* 12px */
---space-4: 1rem; /* 16px */
---space-5: 1.5rem; /* 24px */
---space-6: 2rem; /* 32px */
---space-8: 3rem; /* 48px */
---space-10: 4rem; /* 64px */
-
-/* Container Widths */
---container-sm: 28rem; /* 448px */
---container-md: 32rem; /* 512px */
---container-lg: 38rem; /* 608px */
-
-/* Sidebar */
---sidebar-width: 14rem; /* 224px */
-
-/* Breakpoints */
---bp-sm: 30em; /* 480px */
---bp-md: 38em; /* 608px */
---bp-lg: 48em; /* 768px */
---bp-xl: 56em; /* 896px */
-```
-
-### Effects & Transitions
-
-```css
---transition-fast: 0.15s ease-in-out;
---transition-base: 0.3s ease-in-out;
---shadow-sm: 0.25rem 0 0.5rem rgba(0, 0, 0, 0.1);
---shadow-md: 0.5rem 0 1rem rgba(0, 0, 0, 0.15);
---border-radius: 0.25rem;
-```
+- **Fonts:** Merriweather via Next.js optimization (applied to body, inherited everywhere)
+- **CSS:** ~170 total lines split into two files:
+  - `globals.css`: ~100 lines (base styles, variables, no font declarations)
+  - `markdown.css`: ~70 lines (markdown content styling, easy to replace)
+- **Styling:** Hybrid (base styles + Tailwind utilities)
+- **Theme:** Dark/light mode with theme toggle
 
 ---
 
-## 2. Implementation Structure
+## Implementation Steps
 
-### File Structure
+### Phase 1: Create Theme Infrastructure
 
-```
-/app
-  /globals.css          # Tailwind + CSS variables
-  /layout.tsx           # Add theme provider
-/components
-  /ThemeToggle.tsx      # New: Dark/light mode toggle button
-  /ThemeProvider.tsx    # New: Context for theme state
-  /Header.tsx           # Update: Add ThemeToggle
-  /Footer.tsx
-  /PostList.tsx
-  /Pagination.tsx
-/lib
-  /theme-config.ts      # New: Theme constants and utilities
-/hooks
-  /useTheme.ts          # New: Custom hook for theme management
-```
+#### Step 1.1: Create ThemeProvider Component
 
----
-
-## 3. Step-by-Step Implementation Guide
-
-### Phase 1: Setup Theme Infrastructure
-
-#### Step 1.1: Create Theme Provider
-
-**File: `components/ThemeProvider.tsx`**
+**File:** `components/ThemeProvider.tsx` (NEW FILE)
 
 ```typescript
 'use client';
@@ -215,9 +91,9 @@ export function useTheme() {
 }
 ```
 
-#### Step 1.2: Create Theme Toggle Component
+#### Step 1.2: Create ThemeToggle Component
 
-**File: `components/ThemeToggle.tsx`**
+**File:** `components/ThemeToggle.tsx` (NEW FILE)
 
 ```typescript
 'use client';
@@ -271,72 +147,36 @@ export default function ThemeToggle() {
 }
 ```
 
-### Phase 2: Configure Tailwind v4 & CSS Variables
+---
 
-#### Step 2.1: Update globals.css
+### Phase 2: Create CSS Files
 
-**File: `app/globals.css`**
+#### Step 2.1: Replace globals.css Content
 
-**Note:** This project uses **Tailwind CSS v4**, which uses CSS-based configuration via `@theme` instead of `tailwind.config.ts`.
+**File:** `app/globals.css` (REPLACE ENTIRE FILE)
 
 ```css
 @import 'tailwindcss';
 
-/* Tailwind v4 Theme Configuration */
-@theme {
-  /* Custom colors referencing CSS variables */
-  --color-primary: var(--bg-primary);
-  --color-secondary: var(--bg-secondary);
-  --color-sidebar: var(--bg-sidebar);
-  --color-border: var(--border-color);
+/* ============================================
+   CSS VARIABLES - DESIGN TOKENS
+   ============================================ */
 
-  /* Text colors */
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-muted: var(--text-muted);
-
-  /* Link colors */
-  --color-link: var(--link-color);
-  --color-link-hover: var(--link-hover);
-
-  /* Font families */
-  --font-family-sans: var(--font-sans);
-  --font-family-serif: var(--font-serif);
-
-  /* Spacing - Container max-width */
-  --width-container: 38rem;
-
-  /* Breakpoints (Tailwind v4 uses same breakpoint names) */
-  --breakpoint-sm: 30rem;
-  --breakpoint-md: 38rem;
-  --breakpoint-lg: 48rem;
-  --breakpoint-xl: 56rem;
-}
-
-/* CSS Variables for Light Mode */
 :root {
-  /* Typography */
-  --font-serif: 'PT Serif', Georgia, 'Times New Roman', serif;
-  --font-sans: 'PT Sans', Helvetica, Arial, sans-serif;
-
   /* Colors - Light Mode */
   --bg-primary: #ffffff;
   --bg-secondary: #f9f9f9;
-  --bg-sidebar: #202020;
 
   --text-primary: #313131;
   --text-secondary: #515151;
   --text-muted: #9a9a9a;
-  --text-sidebar: rgba(255, 255, 255, 0.6);
-  --text-sidebar-active: #ffffff;
 
   --border-color: #e5e5e5;
   --link-color: #268bd2;
   --link-hover: #1e6fa8;
 
-  /* Spacing */
+  /* Layout */
   --container-max: 38rem;
-  --sidebar-width: 14rem;
 
   /* Effects */
   --transition: 0.3s ease-in-out;
@@ -347,13 +187,10 @@ export default function ThemeToggle() {
 .dark {
   --bg-primary: #1a1a1a;
   --bg-secondary: #202020;
-  --bg-sidebar: #0a0a0a;
 
   --text-primary: #e0e0e0;
   --text-secondary: #b0b0b0;
   --text-muted: #707070;
-  --text-sidebar: rgba(255, 255, 255, 0.5);
-  --text-sidebar-active: #ffffff;
 
   --border-color: #2a2a2a;
   --link-color: #6a9fb5;
@@ -362,68 +199,69 @@ export default function ThemeToggle() {
   --shadow: 0.25rem 0 0.5rem rgba(0, 0, 0, 0.3);
 }
 
-/* Base Styles */
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   transition:
     background-color var(--transition),
     color var(--transition);
-  font-family: var(--font-serif);
+  font-size: 16px;
   line-height: 1.75;
 }
 
-/* Headings use PT Sans */
+/* Headings */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-sans);
-  font-weight: 400;
+  font-weight: 700;
+  color: var(--text-primary);
   line-height: 1.25;
   letter-spacing: -0.025rem;
-  color: var(--text-primary);
 }
 
 /* Links */
 a {
   color: var(--link-color);
+  text-decoration: none;
   transition: color var(--transition);
 }
 
 a:hover {
   color: var(--link-hover);
 }
+```
 
-/* Container */
-.container {
-  max-width: var(--container-max);
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
+**Key Points:**
 
-/* Code blocks */
-code {
-  font-family: Menlo, Monaco, 'Courier New', monospace;
-  font-size: 0.875rem;
-}
+- Font handled by Next.js optimization (merriweather.className on body)
+- Comprehensive dark/light mode support via `.dark` class
+- All design tokens in CSS variables
+- Clean base element styling
+- ~100 lines (reduced due to markdown separation and no font declarations)
 
-pre {
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 0.25rem;
-  padding: 1rem;
-  overflow-x: auto;
-}
+#### Step 2.2: Create markdown.css
 
-/* Markdown content styling (for react-markdown) */
+**File:** `app/markdown.css` (NEW FILE)
+
+```css
+/* ============================================
+   MARKDOWN CONTENT STYLING
+   ============================================ */
+
 .markdown-content {
   color: var(--text-primary);
-  font-family: var(--font-serif);
   line-height: 1.75;
 }
 
@@ -434,8 +272,7 @@ pre {
 .markdown-content h5,
 .markdown-content h6 {
   color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1.25;
   letter-spacing: -0.025rem;
   margin-top: 2rem;
@@ -483,32 +320,6 @@ pre {
 
 .markdown-content em {
   font-style: italic;
-}
-
-.markdown-content code {
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  padding: 0.125rem 0.375rem;
-  border-radius: 0.25rem;
-  font-size: 0.875em;
-  font-family: Menlo, Monaco, 'Courier New', monospace;
-}
-
-.markdown-content pre {
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 0.375rem;
-  padding: 1rem;
-  overflow-x: auto;
-  margin-bottom: 1.5rem;
-  line-height: 1.5;
-}
-
-.markdown-content pre code {
-  background-color: transparent;
-  padding: 0;
-  border-radius: 0;
-  font-size: 0.875rem;
 }
 
 .markdown-content ul,
@@ -573,58 +384,45 @@ pre {
 .markdown-content table th {
   background-color: var(--bg-secondary);
   font-weight: 700;
-  font-family: var(--font-sans);
 }
 ```
 
-#### Step 2.2: Using Tailwind Classes with Custom Variables
+**Key Points:**
 
-**Note:** With Tailwind v4, you can now use your custom theme tokens directly in utility classes:
+- Self-contained markdown styling
+- Uses CSS variables from globals.css
+- Font inherited from body (Next.js optimization)
+- Easy to replace when switching markdown libraries
+- ~70 lines of focused content styling
 
-```tsx
-// Use custom colors
-<div className="bg-primary text-text-primary">
-
-// Use custom fonts
-<h1 className="font-sans">Heading</h1>
-<p className="font-serif">Body text</p>
-
-// Use custom widths
-<div className="max-w-container">
-
-// Or continue using CSS variables with arbitrary values
-<div className="bg-[var(--bg-primary)] text-[var(--text-primary)]">
-```
-
-**Dark mode** is automatically enabled in Tailwind v4 when you use the `.dark` class on the `<html>` element.
+---
 
 ### Phase 3: Update Components
 
-#### Step 3.1: Update Layout
+#### Step 3.1: Update layout.tsx
 
-**File: `app/layout.tsx`**
+**File:** `app/layout.tsx`
+
+**Changes:**
+
+1. Import `ThemeProvider`
+2. Import both CSS files (globals.css and markdown.css)
+3. Wrap children with `ThemeProvider`
 
 ```typescript
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
-import { ThemeProvider } from '@/components/ThemeProvider';
+import { ThemeProvider } from '@/components/ThemeProvider';  // ADD THIS
 import { SITE_CONFIG } from '@/lib/site-config';
 import type { Metadata } from 'next';
-import { PT_Sans, PT_Serif } from 'next/font/google';
+import { Merriweather } from 'next/font/google';
 import './globals.css';
+import './markdown.css';  // ADD THIS
 
-const ptSans = PT_Sans({
+const merriweather = Merriweather({
   weight: ['400', '700'],
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-sans',
-});
-
-const ptSerif = PT_Serif({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-serif',
 });
 
 export const metadata: Metadata = {
@@ -641,9 +439,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${ptSans.variable} ${ptSerif.variable}`}>
-      <body className="flex min-h-screen flex-col font-serif antialiased">
-        <ThemeProvider>
+    <html lang="en">
+      <body
+        className={`${merriweather.className} flex min-h-screen flex-col antialiased`}
+      >
+        <ThemeProvider>  {/* ADD THIS WRAPPER */}
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
@@ -654,48 +454,108 @@ export default function RootLayout({
 }
 ```
 
-#### Step 3.2: Update Header Component
+#### Step 3.2: Update Header.tsx
 
-**File: `components/Header.tsx`**
+**File:** `components/Header.tsx`
+
+**Changes:**
+
+1. Import `ThemeToggle`
+2. Add theme toggle button
+3. Simplify typography classes (rely on base styles)
+4. Use CSS variables for colors
 
 ```typescript
-import Link from 'next/link';
 import { SITE_CONFIG } from '@/lib/site-config';
-import ThemeToggle from './ThemeToggle';
+import Link from 'next/link';
+import ThemeToggle from './ThemeToggle';  // ADD THIS
 
 export default function Header() {
   return (
-    <header className="border-b border-[var(--border-color)] bg-[var(--bg-primary)]">
-      <div className="container mx-auto flex items-center justify-between px-4 py-6">
-        <div>
-          <Link
-            href="/"
-            className="font-sans text-2xl font-normal no-underline transition-colors hover:text-[var(--link-hover)]"
-          >
-            {SITE_CONFIG.title}
-          </Link>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            {SITE_CONFIG.description}
-          </p>
-        </div>
-        <ThemeToggle />
+    <header className="border-b border-[var(--border-color)]">
+      <div className="container mx-auto flex max-w-3xl items-center justify-between px-4 py-6">
+        <Link href="/">
+          <div className="flex items-end gap-2">
+            <h1 className="text-2xl text-[var(--text-secondary)]">
+              {SITE_CONFIG.title}
+            </h1>
+            <p className="text-lg text-[var(--text-muted)]">
+              {SITE_CONFIG.description}
+            </p>
+          </div>
+        </Link>
+        <ThemeToggle />  {/* ADD THIS */}
       </div>
     </header>
   );
 }
 ```
 
-#### Step 3.3: Update Post Page for Markdown Styling
+**Note:** Removed `text-gray-200`, `text-gray-600`, `text-gray-400` → replaced with CSS variables
 
-**File: `app/posts/[slug]/page.tsx`**
+#### Step 3.3: Update PostList.tsx (Optional Simplification)
 
-**IMPORTANT:** Add the `.markdown-content` class to your Markdown container so the styles from `globals.css` apply:
+**File:** `components/PostList.tsx`
+
+**Optional changes to use base styles:**
 
 ```typescript
-import { getAllPostSlugs, getPostBySlug } from '@/lib/posts';
 import { formatDate } from '@/lib/utils';
-import { notFound } from 'next/navigation';
-import Markdown from 'react-markdown';
+import { Post } from '@/types/post';
+import Link from 'next/link';
+import Pagination from './Pagination';
+
+interface PostListProps {
+  posts: Post[];
+  currentPage: number;
+  totalPage: number;
+}
+
+export default function PostList({
+  posts,
+  currentPage,
+  totalPage,
+}: PostListProps) {
+  return (
+    <div className="container mx-auto max-w-3xl px-4 py-12">
+      <div className="space-y-12">
+        {posts.map((post) => {
+          return (
+            <article className="mb-12" key={post.slug}>
+              <Link href={`/posts/${post.slug}`}>
+                {/* Simplified: h1 gets base styles automatically */}
+                <h1 className="mb-2 text-3xl font-bold">{post.title}</h1>
+              </Link>
+              <time
+                className="mb-4 block text-base text-[var(--text-muted)]"  {/* Changed to CSS variable */}
+                dateTime={post.date}
+              >
+                {formatDate(post.date)}
+              </time>
+              <p>{post.description}</p>
+            </article>
+          );
+        })}
+      </div>
+      <Pagination currentPage={currentPage} totalPage={totalPage} />
+    </div>
+  );
+}
+```
+
+**Changes:**
+
+- `text-[var(--text-secondary)]` → `text-[var(--text-muted)]` for date
+- Headings automatically get base styles (font-family, color, letter-spacing)
+
+#### Step 3.4: Update Post Page for Markdown
+
+**File:** `app/posts/[slug]/page.tsx`
+
+**IMPORTANT:** Add `.markdown-content` class wrapper
+
+```typescript
+// ... existing imports ...
 
 export default async function PostPage({
   params,
@@ -710,19 +570,17 @@ export default async function PostPage({
   }
 
   return (
-    <div className="container mx-auto max-w-container px-4 py-12">
+    <div className="container mx-auto max-w-3xl px-4 py-12">
       <article>
-        <h1 className="mb-2 font-sans text-4xl font-normal tracking-tight text-text-primary">
-          {post.title}
-        </h1>
+        <h1 className="mb-2 text-4xl font-normal">{post.title}</h1>
         <time
           dateTime={post.date}
-          className="mb-8 block text-sm text-text-secondary"
+          className="mb-8 block text-sm text-[var(--text-secondary)]"
         >
           {formatDate(post.date)}
         </time>
 
-        {/* Add markdown-content class here */}
+        {/* ADD markdown-content CLASS */}
         <div className="markdown-content">
           <Markdown>{post.content}</Markdown>
         </div>
@@ -731,186 +589,121 @@ export default async function PostPage({
   );
 }
 
-export async function generateStaticParams() {
-  const slugs = getAllPostSlugs();
-  return slugs.map((slug) => ({ slug }));
-}
+// ... rest of the file ...
 ```
 
-**Key changes:**
-
-- Added `markdown-content` class to the Markdown wrapper
-- Updated typography to use Tailwind custom classes
-- Added proper spacing with `max-w-container`
-- Styled the title and date with Lanyon aesthetic
-
-#### Step 3.4: Update Other Components
-
-Apply similar Lanyon-inspired styling to:
-
-- `Footer.tsx`: Use CSS variables for colors, add spacing
-- `PostList.tsx`: Style post list with proper spacing and typography
-- `Pagination.tsx`: Style buttons with Lanyon aesthetic
-- `app/page.tsx`: Add container classes
-
-### Phase 4: Responsive Design
-
-Add responsive breakpoints following Lanyon's mobile-first approach:
-
-```css
-/* Mobile (default) */
-.container {
-  max-width: 28rem;
-}
-
-/* Tablet */
-@media (min-width: 38em) {
-  .container {
-    max-width: 32rem;
-  }
-}
-
-/* Desktop */
-@media (min-width: 56em) {
-  .container {
-    max-width: 38rem;
-  }
-}
-```
-
-### Phase 5: Testing & Refinement
-
-1. **Test theme persistence**: Reload page, theme should persist
-2. **Test SSR**: Ensure no flash of unstyled content
-3. **Test responsive**: Check all breakpoints
-4. **Test accessibility**: Keyboard navigation, screen readers
-5. **Test performance**: Check for layout shifts
+**Key change:** Wrap `<Markdown>` with `<div className="markdown-content">`
 
 ---
 
-## 4. Key Lanyon Design Principles to Follow
+### Phase 4: Testing & Verification
 
-### Typography
+#### Test Checklist
 
-- Use **PT Serif** for body text (already using PT Sans, add PT Serif)
-- Use **PT Sans** for headings and UI elements
-- Font size: **16px base** (1rem)
-- Line height: **1.75** for body, **1.25** for headings
-- Letter spacing: **-0.025rem** for headings
+1. **Theme Toggle**
+   - [ ] Click theme toggle button (sun/moon icon)
+   - [ ] Page switches between light and dark mode
+   - [ ] Colors change smoothly (transitions work)
 
-### Layout
+2. **Theme Persistence**
+   - [ ] Switch to dark mode
+   - [ ] Refresh page (Ctrl+R or Cmd+R)
+   - [ ] Dark mode persists after reload
 
-- **Content-first**: Keep max-width narrow (38rem max)
-- **Generous whitespace**: Use 4rem margins between sections
-- **Centered content**: Container with auto margins
-- **Mobile-first**: Start narrow, scale up
+3. **Markdown Styling**
+   - [ ] Open a blog post
+   - [ ] Verify headings are styled correctly
+   - [ ] Verify links are blue and underline on hover
+   - [ ] Verify lists, blockquotes, images render well
 
-### Colors
+4. **Dark Mode Appearance**
+   - [ ] Switch to dark mode
+   - [ ] Check all pages (home, post list, individual post)
+   - [ ] Verify text is readable
+   - [ ] Verify links are visible
+   - [ ] Verify borders/backgrounds look good
 
-- **Subtle backgrounds**: Nearly white (#f9f9f9) vs pure white
-- **Readable text**: Good contrast (#313131 on white)
-- **Muted secondaries**: Lighter gray for less important text
-- **Accent color**: One primary link color (default blue)
+5. **Responsive Design**
+   - [ ] Test on mobile viewport (resize browser)
+   - [ ] Verify layout doesn't break
+   - [ ] Verify theme toggle is accessible
 
-### Interactive Elements
-
-- **Smooth transitions**: 0.3s ease-in-out
-- **Subtle hover states**: Slightly darker link color
-- **No heavy shadows**: Light shadow (0.25rem offset)
-- **Minimal borders**: Use sparingly, thin borders
-
----
-
-## 5. Optional Enhancements
-
-### Add Sidebar (Later)
-
-If you want the full Lanyon experience:
-
-- Toggleable sidebar with CSS-only hamburger menu
-- Navigation links
-- Slide-in animation
-- Overlay when open
-
-### Add Theme Color Picker (Advanced)
-
-Allow users to choose from 8 Lanyon accent colors (red, orange, yellow, green, cyan, blue, magenta, brown):
-
-- Create `lib/theme-config.ts` with color definitions
-- Store preference in localStorage
-- Update CSS variable `--link-color` dynamically
-- Show color palette picker in settings or header
-
-### Add Reading Time
-
-- Calculate from post content
-- Display next to date
-
-### Add Table of Contents
-
-- Parse markdown headings
-- Sticky sidebar TOC for long posts
+6. **Typography**
+   - [ ] All text uses Merriweather (body and headings)
+   - [ ] Font sizes are appropriate
+   - [ ] Line heights are comfortable to read
 
 ---
 
-## 6. Implementation Checklist
+## File Summary
 
-### Core Theme System
+### Files to CREATE
 
-- [ ] Create `components/ThemeProvider.tsx` component
-- [ ] Create `components/ThemeToggle.tsx` component
-- [ ] Update `app/globals.css` with `@theme` block and CSS variables (Tailwind v4)
-- [ ] Install PT Serif font alongside PT Sans in `app/layout.tsx`
-- [ ] Update `app/layout.tsx` with ThemeProvider wrapper
+1. `components/ThemeProvider.tsx` - Theme context and state management
+2. `components/ThemeToggle.tsx` - Sun/moon toggle button
+3. `app/markdown.css` - Markdown content styling (~70 lines)
 
-### Component Updates
+### Files to MODIFY
 
-- [ ] Update `components/Header.tsx` with ThemeToggle button
-- [ ] Update `components/Footer.tsx` styling
-- [ ] Update `components/PostList.tsx` styling
-- [ ] Update `components/Pagination.tsx` styling
-- [ ] Update `app/posts/[slug]/page.tsx` with `markdown-content` class wrapper
-
-### Testing & Validation
-
-- [ ] Test theme toggle functionality (click sun/moon icon)
-- [ ] Test theme persistence (reload page, theme should persist)
-- [ ] Test responsive design at all breakpoints (mobile, tablet, desktop)
-- [ ] Test accessibility (keyboard navigation, ARIA labels, screen readers)
-- [ ] Verify no FOUC (flash of unstyled content on page load)
-- [ ] Test SSR compatibility (server-side rendering works correctly)
-- [ ] Test markdown content styling (all elements render correctly)
-- [ ] Test dark mode styling (all components look good in dark mode)
+1. `app/globals.css` - Replace entire file with base styles (~100 lines, no font declarations)
+2. `app/layout.tsx` - Add ThemeProvider wrapper and import markdown.css
+3. `components/Header.tsx` - Add ThemeToggle button, use CSS variables
+4. `components/PostList.tsx` - (Optional) Use CSS variables for colors
+5. `app/posts/[slug]/page.tsx` - Add `.markdown-content` class wrapper
 
 ---
 
-## 7. Resources
+## Why This Approach?
 
-### Lanyon References
+### Pros
 
-- [Lanyon GitHub Repository](https://github.com/poole/lanyon)
-- [Lanyon Demo Site](https://lanyon.getpoole.com/)
-- [Lanyon CSS File](https://github.com/poole/lanyon/blob/master/public/css/lanyon.css)
+1. **Clean Component Code** - Less utility class repetition
+2. **Automatic Markdown Styling** - Blog posts look professional by default
+3. **Easy Theme Switching** - CSS variables handle all color changes
+4. **Consistent Typography** - Headings/links/paragraphs styled automatically
+5. **Maintainable** - Design tokens centralized in `globals.css`
+6. **Modular Architecture** - Markdown styles separate, easy to replace
+7. **Keeps Tailwind** - Still use utilities for layout/spacing
 
-### Next.js Theme Resources
+### Cons Mitigated
 
-- [Next.js App Router Styling](https://nextjs.org/docs/app/building-your-application/styling)
-- [Tailwind Dark Mode](https://tailwindcss.com/docs/dark-mode)
-- [Next Themes Package](https://github.com/pacocoursey/next-themes)
+1. **Two paradigms** - Clear rule: Base styles for elements, utilities for layout
+2. **CSS complexity** - Well-organized with comments
+3. **Learning curve** - Plan provides complete implementation
 
 ---
 
-## Final Notes
+## Quick Reference: When to Use CSS vs Tailwind
 
-This plan provides a complete roadmap for implementing Lanyon-inspired theming with **Tailwind CSS v4**. The implementation is broken into phases so you can work incrementally. Focus on Phase 1-3 first for core functionality, then add refinements in Phase 4-5.
+**Use Base CSS for:**
 
-### Key Tailwind v4 Differences:
+- HTML elements (h1-h6, a, p)
+- Theme-dependent colors (use CSS variables)
+- Typography consistency
 
-- ✅ **No `tailwind.config.ts` needed** - Everything configured in CSS via `@theme`
-- ✅ **CSS-based configuration** - More intuitive and maintainable
-- ✅ **Direct CSS variable access** - Use `bg-primary` instead of `bg-[var(--bg-primary)]`
-- ✅ **Automatic dark mode** - Just add `.dark` class to `<html>`
+**Use Tailwind Utilities for:**
 
-The design maintains Lanyon's elegant simplicity while adding modern dark mode support. All spacing, colors, and typography values are extracted from the original Lanyon CSS for authenticity.
+- Layout & positioning (flex, grid, mx-auto)
+- Spacing (px-4, py-6, mb-4)
+- Component-specific styles
 
-Good luck with implementation! 🚀
+---
+
+## Expected Outcome
+
+After implementation, you'll have:
+
+- ✅ Dark/light mode with theme toggle in header
+- ✅ Clean Merriweather typography throughout
+- ✅ Professional markdown rendering
+- ✅ Modular CSS architecture (easy to swap markdown library)
+- ✅ Reduced JSX class verbosity
+- ✅ Easy theme maintenance via CSS variables
+- ✅ Hybrid approach: Base styles + Tailwind flexibility
+
+**Total Changes:**
+
+- 3 new files (ThemeProvider, ThemeToggle, markdown.css)
+- 5 modified files (globals.css, layout.tsx, Header.tsx, PostList.tsx, post page)
+- ~170 lines of CSS split across 2 files (globals: ~100, markdown: ~70)
+- Font handled by Next.js optimization (no CSS font declarations needed)

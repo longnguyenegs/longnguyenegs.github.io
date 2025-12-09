@@ -21,15 +21,15 @@ export default function PostList({
           return (
             <article className="mb-12" key={post.slug}>
               <Link href={`/posts/${post.slug}`}>
-                <h1 className="mb-2 text-3xl font-bold">{post.title}</h1>
+                <h2 className="text-3xl font-bold">{post.title}</h2>
               </Link>
               <time
-                className="mb-4 block text-base text-[var(--text-secondary)]"
+                className="mb-4 block text-sm text-[var(--text-muted)]"
                 dateTime={post.date}
               >
                 {formatDate(post.date)}
               </time>
-              <p className="">{post.description}</p>
+              <p>{post.description}</p>
             </article>
           );
         })}
