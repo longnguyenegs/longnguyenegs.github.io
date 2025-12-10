@@ -8,7 +8,7 @@ const postsDirectory = path.join(process.cwd(), '_posts');
 let cachedPosts: Post[] | null = null;
 const isDevelopment = process.env.NODE_ENV === 'development';
 
-function getAllPosts(): Post[] {
+export function getAllPosts(): Post[] {
   // Check cached posts first
   if (!isDevelopment && cachedPosts) {
     return cachedPosts;
