@@ -1,8 +1,8 @@
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
-import { ThemeProvider } from '@/components/ThemeProvider';
 import { SITE_CONFIG } from '@/lib/site-config';
 import type { Metadata } from 'next';
+import { ThemeProvider } from 'next-themes';
 import { Open_Sans } from 'next/font/google';
 import './globals.css';
 import './markdown.css';
@@ -28,11 +28,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${openSans.className} flex min-h-screen flex-col antialiased`}
       >
-        <ThemeProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />

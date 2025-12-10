@@ -1,13 +1,25 @@
 'use client';
 
-import { useTheme } from './ThemeProvider';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 
 export default function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  // useEffect only runs on the client, so now we can safely show the UI
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <button
-      onClick={toggleTheme}
+      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
       className="cursor-pointer rounded-md p-2"
       aria-label="Toggle theme"
     >

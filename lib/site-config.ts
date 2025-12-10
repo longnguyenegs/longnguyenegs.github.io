@@ -1,11 +1,8 @@
 export const SITE_CONFIG = {
   // Basic information
-  // title: 'Long Nguyen blog',
-  // description: 'Personal blog by Long Nguyen',
-  // author: 'Long Nguyen',
-  title: 'Lanyon',
-  description: 'A Jekyll theme',
-  author: 'Lanyon',
+  title: 'Long Nguyen Blog',
+  description: 'Personal blog by Long Nguyen',
+  author: 'Long Nguyen',
 
   // Blog settings
   url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
