@@ -1,5 +1,8 @@
 import PostList from '@/components/PostList';
 import { getPaginatedPosts } from '@/lib/posts';
+import { createMetadata } from '@/lib/seo-utils';
+import { SITE_CONFIG } from '@/lib/site-config';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
@@ -34,4 +37,21 @@ export function generateStaticParams() {
   return Array.from({ length: minPages }, (_, i) => ({
     pageNum: String(i + 2),
   }));
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { pageNum } = await params;
+  const page = parseInt(pageNum, 10);
+
+  if (isNaN(page) || page < 1) {
+    return {};
+  }
+
+  return createMetadata({
+    title: `Page ${page}`,
+    description: `${SITE_CONFIG.description} - Page ${page}`,
+    path: `/page/${page}`,
+  });
 }

@@ -1,5 +1,7 @@
 import BackButton from '@/components/BackButton';
 import { getAllPostSlugs, getPostBySlug } from '@/lib/posts';
+import { createMetadata } from '@/lib/seo-utils';
+import { SITE_CONFIG } from '@/lib/site-config';
 import { formatDate } from '@/lib/utils';
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
@@ -17,10 +19,16 @@ export async function generateMetadata({
     return {};
   }
 
-  return {
+  return createMetadata({
     title: post.title,
     description: post.description,
-  };
+    path: `/posts/${slug}`,
+    openGraph: {
+      type: 'article',
+      publishedTime: post.date,
+      authors: [SITE_CONFIG.author],
+    },
+  });
 }
 
 // Lazy load react-markdown and remark-gfm together
