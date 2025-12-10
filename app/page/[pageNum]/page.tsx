@@ -23,10 +23,15 @@ export default async function PaginatedPage({ params }: PageProps) {
   return <PostList {...data} />;
 }
 
-export async function generateStaticParams() {
+export function generateStaticParams() {
   const { totalPage } = getPaginatedPosts(1);
 
-  return Array.from({ length: totalPage - 1 }, (_, i) => ({
+  // Always generate page 2, even if it doesn't exist yet
+  // This allows the build to succeed with 1 post
+  // Page 2 will just 404 until you add more posts
+  const minPages = Math.max(totalPage - 1, 1);
+
+  return Array.from({ length: minPages }, (_, i) => ({
     pageNum: String(i + 2),
   }));
 }
